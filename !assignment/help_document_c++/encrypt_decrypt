@@ -1,0 +1,270 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+#define MAX_LENGTH 256
+
+//function declarations for counter, sorter, encrypt, decrypt.
+int counter(FILE *in_file, char conf, char upperletters[26], char lowerletters[26], int upperfrequency[26], int lowerfrequency[26], int total[26]);
+int sorter(char conf, char upperletters[26], char lowerletters[26], int upperfrequency[26], int lowerfrequency[26], int total[26]);
+void encrypt(char plain[], char cipher[], int key);
+void decrypt(char cipher[], char plain[], int key);
+
+
+int main(int argc, char *argv[]){
+    //declared variables
+    FILE *in_file;
+    FILE *out_file;
+    char lowerletters[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    char upperletters[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    int upperfrequency[26] = {};
+    int lowerfrequency[26] = {};
+    int total[26] = {};
+    char start;
+    char decode;
+    char conf;
+    char in_file_name[MAX_LENGTH];
+    int key;
+
+    char plain[MAX_LENGTH];
+    char cipher[MAX_LENGTH];
+	
+	
+	//Commence program
+	do{
+	    //User friendly prompt to start program. Will repeat if wrong input is entered.
+	    printf("Would you like to start the program? (y/n): ");
+	    scanf("%c", &start);
+	 
+	    if (start == 'y'){
+			//Type of decode
+		  	do{
+				//User friendly prompt to ask for type of decode. Will repeat if wrong input is entered.
+				printf("\nWould you like to encrypt or decrypt your file? (e/d):  ");
+				scanf(" %c", &decode);
+				out_file = fopen("Decoded.txt", "w");
+				if(out_file == NULL)
+				{
+					printf("Couldn't open the specified output file, please check the file name!\n");
+					return 2;
+				}
+
+				if (decode == 'e'){
+					printf("\nPlease enter the FULL file name (with extension): ");
+					scanf("%s", in_file_name);
+					in_file = fopen(in_file_name, "r");
+					//If file is not found.
+					if(in_file == NULL){
+						printf("Couldn't open the specified input file, please check the file name!\n");
+						return 1;
+					}
+					//function calls for both counter and sorter. Key is printed and status of current program situation is printed.
+					counter(in_file, conf, upperletters, lowerletters, upperfrequency, lowerfrequency, total);
+					printf("\nPlease enter the key: ");
+					scanf("%i", &key);
+
+					printf("\nPlease check the 'Decoded.txt' file!\n");
+					rewind(in_file);
+					while(fgets(plain, MAX_LENGTH, in_file) != NULL)
+					{
+					  encrypt(plain, cipher, key);
+					  fprintf(out_file, "%s", cipher);
+					  printf("%s", cipher);
+					}
+					//free(plain);
+					printf("\nThe program has now ended.\n");
+					exit(0);
+				} else if (decode == 'd'){
+	            	printf("\nPlease enter the FULL file name (with extension): ");
+	                scanf("%s", in_file_name);
+	                in_file = fopen(in_file_name, "r");
+	                
+	                if(in_file == NULL){
+	             	    printf("Couldn't open the specified input file, please check the file name!\n");
+	                    return 1;
+	                }
+
+	                //function calls for both counter and sorter. Key is printed and status of current program situation is printed.
+	                counter(in_file, conf, upperletters, lowerletters, upperfrequency, lowerfrequency, total);
+	                key = sorter(conf, upperletters, lowerletters, upperfrequency, lowerfrequency, total);
+	                
+	                printf("\nThe key is %i.\n", key);
+	                rewind(in_file);
+	                while(fgets(cipher, MAX_LENGTH, in_file) != NULL)
+					{
+					  decrypt(cipher, plain, key);
+					  fprintf(out_file, "%s", plain);
+					  printf("%s", plain);
+					}
+					//free(cipher);
+					printf("\nPlease check the 'Decoded.txt' file!\n");
+	                printf("\nThe program has now ended.\n");
+	               	exit(0);
+
+                } else {
+	                printf("Please try again!\n");
+	            }
+	            fclose(in_file);
+	            fclose(out_file);
+	        
+            } while(decode != 'e' || decode != 'd'); 
+      	}
+	    //End of program.
+	    else if (start == 'n'){
+	        printf("Program terminated. \n");
+	        exit(0);
+	    } else {
+	        printf("Please try again!\n");
+	    }
+
+	} while(start != 'y' || start != 'n');
+
+	return 0;
+
+} 
+//function definition for counter
+int counter(FILE *in_file, char conf, char upperletters[26], char lowerletters[26], int upperfrequency[26], int lowerfrequency[26], int total[26])
+{
+
+		printf("\nThe program will now count how many occurences of each letter type (lower case and upper case) there are in your file. It will then show the results of the each letter type together.\n");
+        printf("Would you like the program to continue? (y/n): ");
+        scanf(" %c", &conf);
+        if(conf == 'y'){
+			int index = 0;
+			char plain[MAX_LENGTH];
+			rewind(in_file);
+  			while(fgets(plain, 100, in_file) != NULL){   
+     			int length_of_plain = strlen(plain);
+       			for(index = 0; index < length_of_plain; index++){
+         			if(isalpha(plain[index])){
+           				if(islower(plain[index])){
+             				lowerfrequency[(plain[index]) - 'a']++;
+           				}
+           				else if(isupper(plain[index])){  
+             				upperfrequency[(plain[index]) - 'A']++;
+           				}
+         			}
+       			}    
+  			}
+
+  			for(index = 0; index < 26; index++){
+     			if(upperfrequency[index] > 0 || lowerfrequency[index] > 0){
+     				total[index] = upperfrequency[index] + lowerfrequency[index];
+    				printf("The total number of times the letter %c/%c occurs is %i times. \n", upperletters[index], lowerletters[index], total[index]);
+    			}
+   			} 
+			return total[26];
+
+		} else if (conf == 'n') {
+           printf("Program terminated. \n");
+           exit(0);
+        } else {
+            printf("Please try again!\n");
+        }
+		while(conf != 'y' || conf != 'n');
+
+}
+              
+
+//function definition for sorter
+int sorter(char conf, char upperletters[26], char lowerletters[26], int upperfrequency[26], int lowerfrequency[26], int total[26])
+{
+                 
+		   int index = 0;
+		   int toSort[26] = {};
+		   printf("\nThe program will now sort the letter occurences in descending order and notify you at the end which letter (upper and lower) occurs the most. \n");
+           printf("Would you like the program to continue? (y/n): ");
+           scanf(" %c", &conf);
+           if(conf == 'y'){
+
+			   for(index = 0; index < 26; index++){
+					total[index] = upperfrequency[index] + lowerfrequency[index];
+					toSort[index] = total[index];
+				}
+
+				for(index = 0; index < 26; index++){
+				  	for(int plus = index + 1; plus < 26; plus++){
+						if(toSort[index] < toSort[plus]){
+							toSort[index] = toSort[index] + toSort[plus];
+							toSort[plus] = toSort[index] - toSort[plus];
+							toSort[index] = toSort[index] - toSort[plus];
+						}
+				    }
+	    		}
+
+				for(index = 0; index < 26; index++){
+				  	if (toSort[index] != 0 && index != 25){
+						printf("%d, ", toSort[index]);
+					} else {
+						printf("%d.\n", toSort[index]);
+					}
+				}
+
+				for(index = 0; index < 26; index++){
+					if (toSort[0] == total[index]){
+						printf("\nTherefore, the largest occurence is %i times from the letter %c/%c.\n", total[index], upperletters[index], lowerletters[index]);
+						int key = (lowerletters[index] - 'e') ;
+						return key;
+					}
+				}
+            }
+           else if (conf == 'n'){
+               printf("Program terminated. \n");
+               exit(0);
+           }
+           else{
+               printf("Please try again!\n");
+           }
+           while(conf != 'y' || conf != 'n');	
+} 
+
+
+void encrypt(char plain[], char cipher[], int key)
+{
+	int index = 0;
+	int length_of_plain = strlen(plain);
+ 	for(index = 0; index < length_of_plain; index++)
+	{
+	 if(isalpha(plain[index]))
+	 {
+	  if(islower(plain[index]))
+	  {
+		cipher[index] = (((plain[index] - 97) + key) % 26) + 97;
+	  }
+	  else if(isupper(plain[index]))
+	  {
+	   	cipher[index] = (((plain[index] - 65) + key) % 26) + 65;
+	  }
+	 }
+	else
+	 {
+	  	cipher[index] = plain[index];
+	 }
+	}
+	cipher[length_of_plain] = '\0';
+}
+
+void decrypt(char cipher[], char plain[], int key)
+{
+	int index = 0;
+	int length_of_cipher = strlen(cipher);
+ 	for(index = 0; index < length_of_cipher; index++)
+	{
+	 if(isalpha(cipher[index]))
+	 {
+	  if(islower(cipher[index]))
+	  {
+		plain[index] = (((cipher[index] - 122) - key) % 26) + 122;
+	  }
+	  else if(isupper(cipher[index]))
+	  {
+	   	plain[index] = (((cipher[index] - 90) - key) % 26) + 90;
+	  }
+	 }
+	else
+	 {
+	  	plain[index] = cipher[index];
+	 }
+	}
+	plain[length_of_cipher] = '\0'; //This makes sure that the cipher[ ] array can be used as a string using \0 terminator
+}

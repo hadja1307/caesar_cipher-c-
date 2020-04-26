@@ -14,54 +14,130 @@
 
 
 using namespace std;
-int main(int argc, char **argv[]) //argc is the number of arguments , argv is the vector i.e the string of the array
+
+int main(int argc, char** argv[]) //argc is the number of arguments , argv is the vector i.e the string of the array
 {
-    int my_array[] = { 5, 2, 7, 3, 10, 1 }; // array list contains values 
-    int length = 5; // 5 is the length of the array list
-    char m_array[] = { 'h','e','l','l','o',' ','w','o','r','l','!','d' };
+
+    char Charchoice;
+    int choice;
+    int testChoice = 1;
+    int again = 0;
+    char use_suggest_key;
+    int suggest_key;
+    int user_key;
+    char user_key_char;
+    int key; //declaration of variable key to store the key returned by max_index or user's own key
+    int try_other_key = 0;
+
+    system("cls"); // clear screen 
+
+    cout << "   /===========================================================\\" << endl;
+    cout << "  |      Welcome to the world of Cesar cipher                   |" << endl;
+    cout << "  |      Author : Hadja                                         |" << endl;
+    cout << "  |      Version : 1.0                                          |" << endl;
+    cout << "   \\===========================================================/" << endl << endl;
+
+
     string inputFile = "C:/Users/kadia/OneDrive/Desktop/c++/!assignment/inputfile.txt";  //will be changed based on CLA argv
     string outputFile = "C:/Users/kadia/OneDrive/Desktop/c++/!assignment/outputfile.txt";  //will be changed based on CLA argv
 
     vector <char> arrayout; //declaration of tables 
-    letterType* characterFrequency;
+    Lettertype* characterFrequency;
     int size;
     int maxindex; //storing value of max index returned by max_index function
-    int key; //declaration of variable key to store the key returned by max_index
-    ifstream readmyFile(inputFile) ;
-   //NEED TO CHANGE THIS LOOP , ASK USER TO GIVE EXTENSION OF FILE LOCATION FOR ENCRYPTED FILE AND DECRYPT,
-    //IF FILE EXTENSION GIVEN ISN'T VALID THEN PROMPT USER UNTIL CORRECT FILE EXTENSION IS ENTERED 
-    //IF CORRECT FILE IS ENTERED, THEN USE THAT LOCATION OF ENCRYPTED TEXT AND DECRYPT IT SEND IT TO A FILE
-    
-        
-        if (!readmyFile) {
-            cout << "An error occured reading the input file" << endl;
-            exit(1); //closes the program if can't open the file to read it
+
+    ifstream readmyFile(inputFile);
+    //NEED TO CHANGE THIS LOOP , ASK USER TO GIVE EXTENSION OF FILE LOCATION FOR ENCRYPTED FILE AND DECRYPT,
+     //IF FILE EXTENSION GIVEN ISN'T VALID THEN PROMPT USER UNTIL CORRECT FILE EXTENSION IS ENTERED 
+     //IF CORRECT FILE IS ENTERED, THEN USE THAT LOCATION OF ENCRYPTED TEXT AND DECRYPT IT SEND IT TO A FILE
+
+    Caesar caesar_main; //calling of default constructor
+
+    if (!readmyFile) {
+        cout << "An error occured reading the input file" << endl;
+        exit(1); //closes the program if can't open the file to read it
+    }
+    ofstream writemyFile(outputFile);
+    if (!writemyFile) {
+        cout << "An error occured opening the output file" << endl;
+        exit(1); //closes the program if can't open to write to the file     }
+    }
+
+    arrayout = read_file(inputFile); //the table arrayout will contain the results of the characters frequencies found in the function read file, characters without any numbers, spaces, symbols
+
+    size = arrayout.size();
+    print_vector(arrayout); // prints the vector of characters returned by the read file function
+
+
+
+
+
+    do {
+
+        cout << "   *********   What do you want to do   ?        ***************" << endl << endl;
+        cout << "   ==> 1. Analyse frequent characters               " << endl;
+        cout << "   ==> 2. Decrypt  file                             " << endl;
+        cout << "   ==> 3. Encrypt  file                             " << endl;
+        cout << "   ==> 4. Exit de program                           " << endl;
+        cin >> Charchoice;
+
+        while (!isdigit(Charchoice)) { //this loop will continue until the user enters a digit
+            cout << "Wrong input : must be numeric and chosen from the proposed list Please, try again: ";
+            cin >> Charchoice;
         }
-        ofstream writemyFile(outputFile);
-        if (!writemyFile) {
-            cout << "An error occured opening the output file" << endl;
-            exit(1); //closes the program if can't open to write to the file     }
+        choice = (int)Charchoice - 48; //convert a char into a int 
+
+
+        if (choice == 1) {
+            cout << " You chose Analyse frequent characters :  " << choice << endl;
+            again = 1;
+
+
+            characterFrequency = caesar_main.character_count(arrayout, size); //outputs the frequency of the characters in a table
+            //key = max_index(characterFrequency, size);
+
+        } else if (choice == 2) {
+            characterFrequency = caesar_main.character_count(arrayout, size); //outputs the frequency of the characters in a table
+            suggest_key = max_index(characterFrequency, size);
+            cout << " Do you want to use the suggested key to decrypt, or use your own key? (y/n) : " << endl;
+            cin >> use_suggest_key;
+            if (use_suggest_key == 'y') {
+                key = suggest_key;
+
+            } else {
+
+                cout << "plese enter your suggested key : " << endl;
+                cin >> user_key_char;
+                if (isdigit(user_key_char)) {
+                    user_key = (int)user_key_char - 48; //convert a char into int , using the user's input
+                    key = user_key;
+                } else {
+                    cout << "An error occured, the key must be a numeric " << endl;
+                    again = 1; //gives the use choice to return back to the program and try again
+                }
+
+            }
+            caesar_main.decrypt(key, readmyFile, writemyFile);
+
+            cout << "your file has been decrypted located " << endl;
+            cout << outputFile << endl;
+            again = 1;
+
+        } else if (choice == 3) {
+            cout << "This option is not available at the moment" << endl;
+
+            again = 1; // again = 1 will return to program  menu
+        } else if (choice == 4) {
+            cout << "See you again next time, Bye" << endl;
+            again = 0; //again = 0 means the user can exit the program
         }
-
-        arrayout = read_file(inputFile); //the table arrayout will contain the results of the characters frequencies found in the function read file, characters without any numbers, spaces, symbols
-
-        size = arrayout.size();
-        print_vector(arrayout); // prints the vector of characters returned by the read file function
-
-        characterFrequency = character_count(arrayout, size); //outputs the frequency of the characters in a table
-        key = max_index(characterFrequency, size);
+    } while (again == 1);
 
 
-        decrypt(key, readmyFile, writemyFile);
 
-              
-    
-    //print_characterFrequency(characterFrequency, size); //prints the output of the freuqncy of the charcter
+      return 0;
 
-   //cout << is_upper('A');
-   //cout << to_upper('z');
-   //cout << is_alpha(' ');
-}
+} 
 
 
 /* *******************************************************************

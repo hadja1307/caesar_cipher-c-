@@ -1,0 +1,36 @@
+//ADDED STATEMENT TO ASK USER IF THEY WANT TO DECRYPT THE TEXT OR NOT, IF NOT CLOSE PROGRAM, IF YES CHOOSE FROM POSSIBLE KEYS
+	char user_decrypt_choice = 'n/y';
+	cin >> user_decrypt_choice;
+	char user_decrypt_choice_number;
+
+
+		if (user_decrypt_choice == 'y' || user_decrypt_choice == 'Y') {
+
+			
+			cout << "The key to decrypt : " << key << endl;
+
+		}
+		else if (user_decrypt_choice == 'n' || user_decrypt_choice == 'N')
+		{
+			cout << "you did not choose to decrypt the text, try again" << endl;
+			
+		}
+		
+	//for the main- ask a user to choose 
+	char decode;
+	if (decode == 'd' || user_decrypt_choice == 'y'){
+	            	cout << "make sure to enter the Full file name, including the extension " << endl;
+	                cin >>in_file;
+	                in_file = fopen(name_in_file, "r");
+	                
+	                if(in_file == NULL){
+	             	    cout << "file could not be opened, please verify the file name" endl;
+	                    return 1;
+	                }
+	exit(0);				
+	}
+	
+					
+					
+			
+		 	

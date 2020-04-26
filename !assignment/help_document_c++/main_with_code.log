@@ -1,0 +1,118 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+#include <locale>
+
+using namespace std;
+
+int main()
+{   
+    char Charchoice ; 
+    int choice; 
+    int testChoice =1;
+    int again = 0;
+    system("cls"); // clear screen 
+	
+
+
+   
+    
+    cout << "   /===========================================================\\"<< endl;
+    cout << "  |      Welcome to the world of Cesar cipher                   |" << endl;
+    cout << "  |      Author : Hadja                                         |" << endl;
+    cout << "  |      Version : 1.0                                          |" << endl;
+    cout << "   \\===========================================================/" << endl << endl;
+
+
+    do 
+    {
+        cout << "   *********   What do you want to do   ?        ***************" << endl << endl;
+        cout << "   ==> 1. Analyse frequent characters               " << endl;
+        cout << "   ==> 2. Decrypt  file                             " << endl;
+        cout << "   ==> 3. Encrypt  file                             " << endl;
+        cout << "   ==> 4. Exit de program                           " << endl;
+        cin >> strchoice;
+        while (!isdigit(strchoice))
+        {
+            cout << "Wrong input : must be numeric and chosen from the proposed list Please, try again: ";
+
+            
+            cin >> strchoice;
+            
+        }
+        choice = (int) strchoice -48 ;
+        cout << "choice  : " << choice << endl;
+        cout << "strchoice : " << strchoice << endl;
+
+        if (choice == 1)
+        {
+            cout << " This is your choice :  " << choice << endl;
+            testChoice = 0;
+            
+        }
+        else if (choice == 2)
+        {
+				//ADDED STATEMENT TO ASK USER IF THEY WANT TO DECRYPT THE TEXT OR NOT, IF NOT CLOSE PROGRAM, IF YES CHOOSE FROM POSSIBLE KEYS
+	char user_decrypt_choice;
+	
+	char user_decrypt_choice_number;
+			cin >> user_decrypt_choice;
+            cout << " File decryption is not available in this version. Coming soon.. :  " << endl;
+            testChoice = 1;
+			
+			
+			
+					if (user_decrypt_choice == 'y' || user_decrypt_choice == 'Y') {
+
+			
+			cout << "The key to decrypt : " << key << endl;
+
+		}
+		else if (user_decrypt_choice == 'n' || user_decrypt_choice == 'N')
+		{
+			cout << "you did not choose to decrypt the text, try again" << endl;
+			
+		}
+		
+	//for the main- ask a user to choose 
+	char decode;
+	if (decode == 'd' || user_decrypt_choice == 'y'){
+	            	cout << "make sure to enter the Full file name, including the extension " << endl;
+	                cin >>in_file;
+	                in_file = fopen(name_in_file, "r");
+	                
+	                if(in_file == NULL){
+	             	    cout << "file could not be opened, please verify the file name" endl;
+	                    return 1;
+	                }
+				
+				exit(0);				
+	}
+			
+			
+			
+			
+			
+			
+        }
+        else if (choice == 3)
+        {
+            cout << " File encryption is not available in this version. Coming soon.. :  " << endl;
+            testChoice = 1;
+
+        }
+        else if (choice == 4)
+        {
+            cout << " >>>>>>> Thank you and see you soon ..====>  " << endl;
+            testChoice = 0;
+
+        }
+        else
+        {
+            cout << " Error : your choice is not valide .. :  " << endl;
+            testChoice = 1;
+        }
+    } while (testChoice == 1);
+   
+}
+

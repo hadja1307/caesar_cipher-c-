@@ -11,33 +11,19 @@
 //which can increase based on what we think and can decrease
 using namespace std; //library used to limit the scope of variables in a program
 char alphabet[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
- //const char LanguageFrequentCharacter [26] = { ' e ', ' t ', ' a ', ' o ', ' i ' , ' n ' , ' r ' , ' h ' , ' l ' , ' d ' , ' c ' , ' u ' , ' m ', ' f ', ' p ', ' g ' , ' w ', ' y ' ,' b ' ,' v ' ,' k ' ,' x ' ,' j ' ,' q ' ,' z ' };
- //a list of keys should be provided to the user, for them to choose a key to decrypt the text
- // need to give a list of keys to the user, to allow them to choose a key 
- //language frequency char of [26] elelemt array uses all those letter as they are most used letters in english alphabet, to find the key
- const char LanguageFrequentCharacter = 'e'; //original, uses e to find the key
-
-
-//the default constructor
- Caesar::Caesar() {
-	 
- }
-
+const char LanguageFrequentCharacter = 'e';
 
 
 /* *******************************************************************
 //Function to find the character in a table, will do the the following:
 if the letter exists in the table, then return the position of the letter
 if the letter isn't found, -1 will be returned
-@param Lettertype * array
+@param letterType * array
 @param int size
 @param char letter_To_search
 
 *******************************************************************/
-
- 
-
- int find_character_in_table (Lettertype *array, int size, char letter_to_search)
+int find_character_in_table (letterType *array, int size, char letter_to_search)
 { 
 	for (int i = 0; i < size; i++) {
 		if (array[i].letter == letter_to_search) {
@@ -185,7 +171,7 @@ test @ ? = false
 	@param char input_char
 *******************************************************************/
 
-bool is_alphabet(char input_char)
+bool is_alphabet(char input_char) 
 {
 	if ((input_char >= 97 && input_char <= 122) || (input_char >= 65 && input_char <= 90)) {
 		return true;
@@ -201,24 +187,24 @@ bool is_alphabet(char input_char)
 	the function max_index returns the - max index of the array list
 	it uses the character frequency on max index to find a key to decrypt the string
 	test @ 123459781 = max value is 9, which has an index of 5, so 5 is returned
-	@param Lettertype * array
+	@param letterType * array
 	@param int size
 
 	array will contain the character and the frequencies in the array list
-	index will contain the size of the Lettertype array, array count starts at 0
+	index will contain the size of the letterType array, array count starts at 0
 	int *array is a pointer (memory location)
 	//size is better to use in array
 
 
 *******************************************************************/
-int max_index(Lettertype* array, int size) {
+int  max_index (letterType* array, int size) {
 	int max = 0;
-	int index = 0;
+	int index= 0;
 	int i;
 	int j = 0;
 	int key;
 
-	Lettertype* validCharacterFrequency;
+	letterType* validCharacterFrequency;
 
 	max = array[0].count;
 
@@ -229,7 +215,7 @@ int max_index(Lettertype* array, int size) {
 		}
 	}
 
-	validCharacterFrequency = new Lettertype[j]; //dynamic memory allocation to store the results of valid character frequency
+	validCharacterFrequency = new letterType[j]; //dynamic memory allocation to store the results of valid character frequency
 	j = 0; //reinitialise the value of j reset to 0
 	for (i = 0; i < size; i++) //determines the number of valid values in the array list of characters
 	{
@@ -238,34 +224,26 @@ int max_index(Lettertype* array, int size) {
 			validCharacterFrequency[j].letter = array[i].letter;//copy the value of the character from previous table into new table
 			validCharacterFrequency[j].count = array[i].count;//also copy the frequency of that letter from previous table to new table
 
-
+			
 			j++;
 		}
 	}
 	//calculate the max index of the valid character frequency
 	max = validCharacterFrequency[0].count;
-	for (i = 0; i < j; i++) {
-
+	for (i = 0; i < j; i++) 
+	{
+		
 		if (validCharacterFrequency[i].count >= max) {
 			index = i;
 			max = validCharacterFrequency[i].count; //max changes and becomes the new current highest number of that character
 		}
 	}
-
-	//key = keyCalculator(*LanguageFrequentCharacter, validCharacterFrequency[index].letter); 
-	//*langfrequency to get a list of most used letters based on figure 1 in assignment
-
+	
 	key = keyCalculator(LanguageFrequentCharacter, validCharacterFrequency[index].letter);
-
+	
 	cout << "Language Most frequence character : " << LanguageFrequentCharacter << endl;
 	cout << "Most frequent character in your file :  " << validCharacterFrequency[index].letter << endl;
-	cout << "The suggested key to decrypt is : " << key << endl;
-
-		
-	//cout << "The key to decrypt : " << key << endl;
-	//cout << "The key to decrypt : " << key << endl;
-	//cout << "The key to decrypt : " << key << endl;
-
+	cout << "The key to decrypt : " << key << endl;
 	return key; //becasue the alphabet start from 0 counting for the array
 }
 
@@ -306,11 +284,6 @@ int keyCalculator(char LanguageFrequentCharacter, char mostFrequentCharacter)
 	return key;
 }
 
-
-//TEST IF USER WANTS TO DECRYPT FILE OR NOT, IF NOT THEN DO NOTHING, IF YEST DECRYPT FILE AND OUTPUT IT IN ANOTHER FILE
-
-
-
 /* *******************************************************************
 the function decrypt will decrypt the string using the encrypted inputFile, 
 the key to decrypt it and then output the decrypted file into outputFile
@@ -321,21 +294,22 @@ the key to decrypt it and then output the decrypted file into outputFile
 	@param ofstream & outputFile
 	@param ifstream & inputFile
 *******************************************************************/
-void Caesar::decrypt(int key, ifstream& inputFile, ofstream& outputFile) {
-
+void decrypt(int key, ifstream& inputFile, ofstream& outputFile) {
+	//changes the [ into b
+	//changes the a into Z
 	char mycharacter;
 	while (inputFile.get(mycharacter)) //read file by each character 
 	{
 		if (is_alphabet(mycharacter)) // if the character is an Alphabet
 		{
-
+			
 			//mycharacter = mycharacter - key; //Apply the shifts
 
-			if (to_upper(mycharacter <= 'Z') || (to_upper(mycharacter <= 'A'))) {
+			if (to_upper(mycharacter <= 'Z' ) || (to_upper(mycharacter <= 'A')))
+			{
 				//mycharacter = mycharacter - 'Z' + 'A' - 1;
-				mycharacter = (mycharacter - 90 - key) % 26 + 90;
+				mycharacter = (mycharacter - 90 - key ) % 26 + 90;
 				//used when the applied shift is negative
-				// //decrypt uppercase characters
 				//if a character is UPPERCASE, i.e. Z then subtract 90 from it and the key
 				//then take the remainder of 26 add that to 90
 				//90 is lowercase Z in ascii value
@@ -343,7 +317,6 @@ void Caesar::decrypt(int key, ifstream& inputFile, ofstream& outputFile) {
 			//ADDED ELSE IF STATEMENT
 			else if (is_upper(mycharacter <= 'a') || (is_upper(mycharacter <= 'z'))) {
 				mycharacter = (mycharacter - 122 - key) % 26 + 122;
-				//decrypt lowecase characters
 				//if a character isn't uppercase, i.e. a then subtract 122 from it and the key
 				//then take the remainder of 26 add that to 122
 				//122 is lowercase z in ascii value
@@ -360,13 +333,33 @@ void Caesar::decrypt(int key, ifstream& inputFile, ofstream& outputFile) {
 			outputFile << mycharacter; //write the non alphabetic character to the output file
 		}
 
-
+				
+		}
 	}
-}
+
+
+
 
 
 	
+/* *******************************************************************
+	DOES NOT SHOW ON TERMINAL, DON'T THINK IT IS NEEDED
+	print_analysis_array will print out the array, gives the user information as they go on 
+	prints character array to the user 
+	@param int * array
+	@param int size
+*******************************************************************/
+void print_array(int *array,int size) {
+	cout <<"-----------------------------------------------"<< endl;
+	for (int i = 0; i <= size; i++)
+	{
+		cout << array[i]<< "| ";
+	
+	}
+	cout << endl;
+	cout << "-----------------------------------------------" << endl;
 
+}
 
 /* *******************************************************************
 	print_vector  will print out the array, gives the user information as they go on 
@@ -389,24 +382,75 @@ void print_vector(vector <char> arrayout)
 	}
 	cout << endl << endl;
 	cout << "Encrypted text All printed out now" << endl << endl;
-	
+	cout << " Below is the number of occurences for each character found on the text" << endl << endl;
 
 }
 
+
+/* *******************************************************************
+	character_count counts the frequencies a specific letter appears 
+	i do think it should use an array of 26 elelement to count the occurenc eof that letter in the alphabet
+	the result of the count should be stored in the 25th element array, this will be used to analysize the array and from that workout what the key should be
+		// i will take each character in the array, j will check the frequency of that character, 
+		//max index and the function character_count will be used to find the most frequent character , order it from largest to smallest  and display it on the screen
+*******************************************************************/
+
+/*letterType character_count(letterType *array, int size) {
+
+	int i;
+	int j;
+	const int sizeTwo = size ;
+ //personalised type i.e. letterType, which will contain  the number of times the letter occures
+	letterType  arrayout[sizeTwo]; // array of letter type = arrayout, each element of the array contains a letter and the frequencies of that letter
+
+	int count_current = 0;
+	char letter_to_search; // current letter to search
+
+	// i will take each character in the array, j will check the frequency of that character, 
+	for (i = 0; i < size; i++) // first for loop to set a fixed value and checks the number of times that letter appears
+	{
+		if (is_alphabet(array[i].letter)) //filters the alphabet letter, and do not take into account the letters that has already been red, they are marked as *
+		{
+
+			letter_to_search = array[i].letter;
+			for (j = 0; j < size; j++) //ccounts the number of time a current value occurs
+			{
+
+				if (is_alphabet(array[j].letter)) // uses the function is_alphabet to check if current character alphabetic (in the alphabet)
+				{
+					//checks if the array[j] is equal to letter_to_search
+
+					if (array[j].letter == letter_to_search)
+					{
+						count_current++; // if the character array[j] and letter_to_search is equal then increment the value of the current count
+						array[j].letter = '*'; //marks as alread counted character
+
+					}
+				}
+
+			}
+			arrayout.letter = letter_to_search;
+			arrayout.count = count_current;
+			
+			count_current = 0; // resets the value of count_current to 0
+		}
+	}
+	return arrayout;
+} */
 
 /* *******************************************************************
  print character frequency outputs the frequencies of each character in the array  
 by firstly reading the encrypted text in the file
 	test @ aaaa ==> 4
 	test @ helloworld = o==> 2 , l==> 3, h==> 1 , e==> 1, w==> 1 , r==> 1, d==> 1 
-	@param Lettertype *arrayout
+	@param letterType *arrayout
 	@param int size
 *******************************************************************/
-void Caesar::print_characterFrequency(Lettertype *arrayout, int size) // arrayout is an array of  a Lettertype and a paremeter of the size of the table
+void print_characterFrequency(letterType *arrayout, int size) // arrayout is an array of  a letterType and a paremeter of the size of the table
 {
 	int i;
 	int j = 0;
-	Lettertype * validCharacterFrequency;
+	letterType * validCharacterFrequency;
 	for (i = 0; i < size ; i++)
 		
 	{
@@ -422,7 +466,7 @@ void Caesar::print_characterFrequency(Lettertype *arrayout, int size) // arrayou
 }
 
 /* *******************************************************************
-	Lettertype character_cout function will return the array of the character and its size
+	letterType character_cout function will return the array of the character and its size
 	letterTpe will get the value of the vector 
 	tests if the character does  not exists in the table of characterfrequency 
 	then add the letter to the characterFrequency and then count 1
@@ -430,8 +474,8 @@ void Caesar::print_characterFrequency(Lettertype *arrayout, int size) // arrayou
 
 *******************************************************************/
 
-Lettertype * Caesar::character_count(vector <char> array, int size) {
-	Lettertype* characterFrequency  = new Lettertype[size];  //dynamic memory allocation, using the keyword new 
+letterType * character_count(vector <char> array, int size) {
+	letterType* characterFrequency  = new letterType[size];  //dynamic memory allocation, using the keyword new 
 	
 	int index;
 	int maxindex;
@@ -462,40 +506,50 @@ Lettertype * Caesar::character_count(vector <char> array, int size) {
 
 }
 
-
-
-
-/* *******************************************************************
-//key_option_user is the function for the user to choose a key for decryption.
-// may need to be called for keyCalculator
-
-*******************************************************************/
-
 /*
-char key_option_user(char* array, int size) {
-	//const char LanguageFrequentCharacter [26] = { ' e ', ' t ', ' a ', ' o ', ' i ' , ' n ' , ' r ' , ' h ' , ' l ' , ' d ' , ' c ' , ' u ' , ' m ', ' f ', ' p ', ' g ' , ' w ', ' y ' ,' b ' ,' v ' ,' k ' ,' x ' ,' j ' ,' q ' ,' z ' };
-	char possible_keys [26] = { ' e ', ' t ', ' a ', ' o ', ' i ' , ' n ' , ' r ' , ' h ' , ' l ' , ' d ' , ' c ' , ' u ' , ' m ', ' f ', ' p ', ' g ' , ' w ', ' y ' ,' b ' ,' v ' ,' k ' ,' x ' ,' j ' ,' q ' ,' z ' };
-	//
+void m_character_count(char* array, int size) {
 
-	char user_choice_key;
-	cin >> user_choice_key;
-	char i;
+	int i;
+	int j;
+	int count_current = 0;
+	char letter_to_search; // current letter to search
 
-	
-		cout << "Below is the list of keys" << endl;
-		if ((!user_choice_key ) {
-			cout << "good choice of key" << endl;
-			return user_choice_key;
-			//decrypt(LanguageFrequentCharacter, keyCalculator);
+	// i will take each character in the array, j will check the frequency of that character, 
+	for (i = 0; i < size; i++) // first for loop to set a fixed value and checks the number of times that letter appears
+	{
+		if (is_alphabet(array[i])) //filters the alphabet letter, and do not take into account the letters 
+								   //that has already been red, they are marked as *
+		{
+
+			letter_to_search = array[i];
+			for (j = 0; j < size; j++) //ccounts the number of time a current value occurs
+			{
+
+				if (is_alphabet(array[j])) // uses the function is_alphabet to check if current character alphabetic (in the alphabet)
+				{
+					//checks if the array[j] is equal to letter_to_search
+
+					if (array[j] == letter_to_search)
+					{
+						count_current++; // if the character array[j] and letter_to_search is equal then increment the value of the current count
+						array[j] = '*'; //marks as alread counted character
+
+					}
+				}
+
+			}
+			cout << "Letter : " << letter_to_search << " ==> " << count_current << " times" << endl;
+			count_current = 0; // resets the value of count_current to 0
 		}
-		
-		else ((user_choice_key == NULL)) {
-			cout << "your choice was empty" << endl;
-		}
-
-
-	
 	}
+}
 
-	*/
-
+void test()
+{
+	char c1 = 'A';
+		
+		int key = 7;
+		c1 = c1 - key;
+		cout << (65 - c1) + 65;
+}
+*/
