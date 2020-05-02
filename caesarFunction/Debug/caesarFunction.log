@@ -1,0 +1,10 @@
+﻿  caesarFunction.cpp
+C:\Users\kadia\OneDrive\Desktop\c++\!assignment\caesarFunction\caesarFunction.cpp(265,7): warning C4101: 'temp': unreferenced local variable
+C:\Users\kadia\OneDrive\Desktop\c++\!assignment\caesarFunction\caesarFunction.cpp(397,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\kadia\OneDrive\Desktop\c++\!assignment\caesarFunction\caesarFunction.cpp(424,14): warning C4101: 'validCharacterFrequency': unreferenced local variable
+C:\Users\kadia\OneDrive\Desktop\c++\!assignment\caesarFunction\caesarFunction.cpp(451,6): warning C4101: 'maxindex': unreferenced local variable
+  main.cpp
+C:\Users\kadia\OneDrive\Desktop\c++\!assignment\caesarFunction\main.cpp(48,9): warning C4101: 'maxindex': unreferenced local variable
+  Generating Code...
+C:\Users\kadia\OneDrive\Desktop\c++\!assignment\caesarFunction\caesarFunction.cpp(101): warning C4715: 'read_file': not all control paths return a value
+  caesarFunction.vcxproj -> C:\Users\kadia\OneDrive\Desktop\c++\!assignment\caesarFunction\Debug\caesarFunction.exe
